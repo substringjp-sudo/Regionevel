@@ -10,7 +10,17 @@ export interface VisitDataStore {
 
 export interface RegionDataStore {
   getRegions(iso3: string): Promise<Region[]>;
-  seedRegions(regions: Region[]): Promise<void>;
+  getChildren(parentId: string | null): Promise<Region[]>;
+  getAllRegions(): Promise<Region[]>;
+  getRegion(id: string): Promise<Region | null>;
+  getRegionsByIds(ids: string[]): Promise<Region[]>;
+  getGeometries(ids: string[]): Promise<any[]>;
+  getGeometriesByParent: (parentId: string | null) => Promise<any[]>;
+  getGeometriesByCountry: (iso3: string, admLevel: number) => Promise<any[]>;
+  getGeometryBundle: (iso3: string, admLevel: number) => Promise<any | null>;
+  seedRegions: (regions: Region[]) => Promise<void>;
+  seedGeometries: (geometries: any[]) => Promise<void>;
+  getSimplifiedGeometries: (iso3: string) => Promise<any[]>;
 }
 
 export interface AuthUser {

@@ -1,26 +1,25 @@
 import Link from "next/link";
+import { Introduction } from "@/components/landing/Introduction";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-56px)] gap-6 px-4">
-      <h1 className="text-4xl font-bold text-blue-700">Regionevel</h1>
-      <p className="text-gray-500 text-center max-w-sm">
-        각 지역을 얼마나 깊이 경험했는지 기록하고 점수로 확인하세요.
-      </p>
-      <div className="flex gap-4">
+    <div className="flex flex-col items-center w-full min-h-screen bg-slate-50">
+
+      {/* Onboarding / Introduction Section */}
+      <div id="how-it-works" className="w-full bg-white">
+        <Introduction />
+      </div>
+
+      {/* Footer-like Call to Action */}
+      <section className="py-20 px-4 text-center bg-slate-50 w-full border-t border-gray-100">
+        <h2 className="text-3xl font-bold mb-8 text-gray-800">Ready to record your journey?</h2>
         <Link
           href="/map"
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          className="px-10 py-4 bg-slate-900 text-white font-black text-xl hover:bg-slate-800 transition-all inline-block shadow-lg"
         >
-          지도 보기
+          Open World Map
         </Link>
-        <Link
-          href="/list"
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-        >
-          목록 보기
-        </Link>
-      </div>
+      </section>
     </div>
   );
 }

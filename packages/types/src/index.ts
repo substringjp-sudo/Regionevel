@@ -1,50 +1,68 @@
-export type VisitCategory =
-  | "passing"
-  | "transit"
-  | "visit"
-  | "accommodation"
-  | "residence";
+export type VisitCategory = "pass" | "transit" | "visit" | "stay" | "residence";
 
 export interface VisitCategoryConfig {
   label: string;
+  description: string;
   maxCount: number;
   pointsPerCount: number;
   maxPoints: number;
+  color: string;
+  emoji: string;
 }
 
 export const VISIT_CONFIG: Record<VisitCategory, VisitCategoryConfig> = {
-  passing: { label: "지나감", maxCount: 5, pointsPerCount: 1, maxPoints: 5 },
+  pass: {
+    label: "Pass",
+    description: "Passing through by car or train",
+    maxCount: 5,
+    pointsPerCount: 1,
+    maxPoints: 5,
+    color: "#FFD60A",
+    emoji: "🚗",
+  },
   transit: {
-    label: "발을 붙임",
+    label: "Transit",
+    description: "Brief stop at a station or rest area",
     maxCount: 5,
     pointsPerCount: 2,
     maxPoints: 10,
+    color: "#FF9F0A",
+    emoji: "🚉",
   },
   visit: {
-    label: "소비 및 방문",
+    label: "Visit",
+    description: "Sightseeing or having a meal",
     maxCount: 3,
     pointsPerCount: 5,
     maxPoints: 15,
+    color: "#32ADE6",
+    emoji: "📸",
   },
-  accommodation: {
-    label: "숙박",
+  stay: {
+    label: "Stay",
+    description: "Staying overnight (one or more nights)",
     maxCount: 3,
     pointsPerCount: 10,
     maxPoints: 30,
+    color: "#007AFF",
+    emoji: "🛌",
   },
   residence: {
-    label: "거주",
+    label: "Residence",
+    description: "Living or long-term stay",
     maxCount: 1,
     pointsPerCount: 40,
     maxPoints: 40,
+    color: "#5856D6",
+    emoji: "🏠",
   },
 } as const;
 
 export const VISIT_CATEGORY_ORDER: VisitCategory[] = [
-  "passing",
+  "pass",
   "transit",
   "visit",
-  "accommodation",
+  "stay",
   "residence",
 ];
 
@@ -58,8 +76,13 @@ export interface Region {
   id: string;
   parentId: string | null;
   name: string;
+  nameKo?: string;
+  nameEn?: string;
   iso3: string; // ISO 3166-1 alpha-3
   admLevel: AdmLevel;
+  childrenCount?: number;
+  code?: string;
+  type?: string;
 }
 
 export interface RegionVisit {
@@ -71,14 +94,28 @@ export interface RegionVisit {
 }
 
 export interface RegionScoreBreakdown {
-  count: number;
+  directCount: number;
+  effectiveCount: number;
   points: number;
 }
 
 export interface RegionScore {
   regionId: string;
-  directScore: number;
-  aggregatedChildScore: number;
-  totalScore: number;
+  directScore: number;     // 점수 (자체 방문)
+  rateScore: number;       // 하위 지역 합산 점수 (0-100)
+  childSum: number;        // 하위 지역 점수 총합
+  childMax: number;        // 하위 지역 가용 최대 점수
+  totalScore: number;      // 지도 표시용 최종 점수 (rateScore > 0 ? rateScore : directScore)
+  scoreType: "blue" | "orange"; // 색상 계열 결정
+  hasVisit: boolean;       // 실제 방문 여부 (점수와 무관하게 카운트용)
   breakdown: Record<VisitCategory, RegionScoreBreakdown>;
+  subRegionStats?: {
+    visitedCount: number;
+    totalCount: number;
+  };
+  cityStats?: {
+    visitedCount: number;
+    totalCount: number;
+  };
 }
+
